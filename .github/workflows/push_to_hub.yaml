@@ -2,8 +2,9 @@ name: Push_to_hub
 
 on:
   push:
-  - main
-  pull-request:
+    branches:
+      - main
+  pull_request:
     branches:
     - main
   workflow_dispatch:
@@ -19,14 +20,12 @@ env:
 
 
 jobs:
-  Publish the docker:
+  Publish_the_docker:
     runs-on: ubuntu-latest
 
     steps:
     - name: Accessing the repository
-      uses: action/checkout@v3
-    - name: Fecthing docker manager
-      uses: action/docker@v3
+      uses: actions/checkout@v3
     - name: Build the docker
       run: |
         sudo docker build -t ${{env.IMAGE_NAME}}:${{env.TAG_NAME}} ${{env.DOCKER_FILE_PATH}}
