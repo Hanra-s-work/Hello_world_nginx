@@ -1,9 +1,9 @@
 name: Push_to_hub
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   pull_request:
     branches:
     - main
@@ -34,7 +34,7 @@ jobs:
         echo "${{secrets.DOCKER_HUB_PASSWORD_HANRA}}" | docker login --username=${{secrets.DOCKERHUB_USERNAME_HANRA}}
     - name: Preparing image for publishing
       run: |
-        sudo docker tag local-image:${{env.TAG_NAME}} new-repo:${{env.TAG_NAME}}
+        sudo docker tag ${{env.IMAGE_NAME}}:${{env.TAG_NAME}} ${{env.REGISTRY_URL}}:${{env.TAG_NAME}}
     - name: Publishing image
       run: |
         sudo docker push ${{env.REGISTRY_URL}}:${{env.TAG_NAME}}
