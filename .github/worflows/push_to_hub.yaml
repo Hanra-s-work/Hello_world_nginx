@@ -1,0 +1,40 @@
+name: Push_to_hub
+
+on:
+  push:
+  - main
+  pull-request:
+    branches:
+    - main
+  workflow_dispatch:
+
+env:
+  DOCKER_FILE_PATH: .
+  IMAGE_NAME: hello-world-nginx
+  DEST_IMAGE_NAME: hello-world-nginx
+  REGISTRY_URL: hanralatalliard/hello-world-nginx
+  HUB_USERNAME: ${{secrets.HUB_USERNAME}}
+  HUB_PASSWORD: ${{secrets.HUB_PASSWORD}}
+
+
+jobs:
+  Publish the docker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Accessing the repository
+      uses: action/checkout@v3
+    - name: Fecthing docker manager
+      uses: action/docker@v3
+    - name: Build the docker
+      run: |
+        sudo docker build -t ${{env.IMAGE_NAME}} ${{env.DOCKER_FILE_PATH}}
+    - name: Logging into docker hub
+      run: |
+        echo "${{secrets.REGISTRY_PWD_HANRA}}" | docker login --username=${{secrets.USERNAME_HANRA}}
+    - name: Preparing image for publishing
+      run: |
+        sudo docker tag local-image:tagname new-repo:tagname
+    - name: Publishing image
+      run: |
+        sudo docker push new-repo:tagname
